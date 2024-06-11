@@ -1,26 +1,29 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import NavbarHome from "../../../components/NavbarHome";
+import { useParams } from "react-router-dom";
 
 const Following = () => {
+    const { username } = useParams();
     const [following, setFollowing] = useState([]);
 
-    const fetchFollowing = async () => {
-        try {
-            const response = await axios.get("http://127.0.0.1:8000/api/v1/following", {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-            setFollowing(response.data.following);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
+    
     useEffect(() => {
+        const fetchFollowing = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/v1/users/${username}/following`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setFollowing(response.data.following);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
         fetchFollowing();
-    }, []);
+    }, [username]);
 
 
 
