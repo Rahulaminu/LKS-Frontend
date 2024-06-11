@@ -53,15 +53,52 @@ const UserDetail = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({}),
         }
       );
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Network response was not ok");
       }
       const data = await response.json();
-      setUser((prevUser) => ({ ...prevUser, is_following: data.is_following }));
+      setUser((prevUser) => ({
+        ...prevUser,
+        is_following: data.status === "following",
+      }));
+      alert(data.message);
+      window.location.reload();
     } catch (error) {
       console.error("Follow error:", error);
+      alert(error.message);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/v1/users/${username}/unfollow`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Network response was not ok");
+      }
+      // const data = await response.json(); // Tidak ada respons JSON untuk status 204
+      setUser((prevUser) => ({
+        ...prevUser,
+        is_following: false,
+      }));
+      alert("Unfollow successful");
+      window.location.reload();
+    } catch (error) {
+      console.error("Unfollow error:", error);
+      alert(error.message);
     }
   };
 
@@ -80,15 +117,30 @@ const UserDetail = () => {
             </div>
             <div>
               {user.is_your_account ? (
-                <button className="mt-5 bg-blue-500 text-white px-4 py-2 rounded w-full">
-                  + Create new post
-                </button>
+                <Link to="/post">
+                  <button className="mt-5 bg-blue-500 text-white px-4 py-2 rounded w-full">
+                    + Create new post
+                  </button>
+                </Link>
               ) : (
                 <button
-                  onClick={handleFollow}
-                  className="mt-5 bg-blue-500 text-white px-4 py-2 rounded w-full"
+                  onClick={
+                    user.following_status === "following" ||
+                    user.following_status === "requested"
+                      ? handleUnfollow
+                      : handleFollow
+                  }
+                  className={`mt-5 ${
+                    user.following_status === "following" ||
+                    user.following_status === "requested"
+                      ? "bg-gray-500"
+                      : "bg-blue-500"
+                  } text-white px-4 py-2 rounded w-full`}
                 >
-                  {user.is_following ? "Unfollow" : "Follow"}
+                  {user.following_status === "following" ||
+                  user.following_status === "requested"
+                    ? "Unfollow"
+                    : "Follow"}
                 </button>
               )}
               <div className="flex items-center justify-between mt-5">
