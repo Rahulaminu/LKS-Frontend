@@ -30,7 +30,7 @@ const Following = () => {
             <NavbarHome/>
             <div className="bg-white p-6 rounded-lg shadow-md ">
                 <h3 className="font-semibold text-lg mb-4 mt-10 py-5">Following</h3>
-                {following.length ? (
+                {following ? (
                     <ul>
                         {following.map((user, index) => (
                             <li key={index} className="mb-2 border p-2 rounded-md">
