@@ -12,7 +12,6 @@ const Posts = () => {
         },
       });
       setPosts(response.data.posts.data);
-      console.log(response.data.posts.data);
     } catch (error) {
       console.error(error);
     }

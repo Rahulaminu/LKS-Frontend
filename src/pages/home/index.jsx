@@ -5,7 +5,8 @@ import Posts from "../../features/Posts";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const [users, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [followers, setFollowers] = useState([]);
 
   const fetchUsers = async () => {
     try {
@@ -14,7 +15,47 @@ const Home = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      setUser(response.data.users);
+      setUsers(response.data.users);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchFollowers = async () => {
+    try {
+      const username = localStorage.getItem("username");
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/users/${username}/followers/request`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.data && Array.isArray(response.data.followers)) {
+        const followerUsernames = response.data.followers.map(
+          (follower) => follower.username
+        );
+        setFollowers(followerUsernames);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleConfirm = async (username) => {
+    try {
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/v1/users/${username}/accept`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      alert(response.data.message);
+      setFollowers(followers.filter((follower) => follower !== username));
     } catch (error) {
       console.error(error);
     }
@@ -22,6 +63,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchFollowers();
   }, []);
 
   return (
@@ -38,12 +80,24 @@ const Home = () => {
         <div className="w-1/3 p-4">
           <div className="bg-white p-6 rounded-lg shadow-md mb-4">
             <h3 className="font-semibold text-lg mb-2">Follow Requests</h3>
-            <div className="flex items-center justify-between mb-4 border p-2 rounded-md">
-              <span>@laychristian92</span>
-              <button className="bg-blue-500 text-white px-3 py-1 rounded">
-                Confirm
-              </button>
-            </div>
+            {followers.length > 0 ? (
+              followers.map((username, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between mb-4 border p-2 rounded-md"
+                >
+                  <span>@{username}</span>
+                  <button
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                    onClick={() => handleConfirm(username)}
+                  >
+                    Confirm
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p>Tidak ada follow requests</p>
+            )}
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="font-semibold text-lg mb-4">Explore People</h3>
