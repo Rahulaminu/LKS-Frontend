@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import NavbarHome from "../../components/NavbarHome";
+import axios from "axios";
 
 const UserDetail = () => {
   const { username } = useParams();
@@ -102,6 +103,28 @@ const UserDetail = () => {
     }
   };
 
+  const handleDelete = async (postId) => {
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:8000/api/v1/posts/${postId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 204) {
+        alert("Post deleted successfully");
+        window.location.reload();
+      } else {
+        throw new Error("Failed to delete post");
+      }
+    } catch (error) {
+      console.error("Delete post error:", error);
+      alert(error.message);
+    }
+  };
+
   return (
     <>
       <NavbarHome />
@@ -182,6 +205,21 @@ const UserDetail = () => {
                     ))}
                   </div>
                   <p className="p-4 text-gray-700">{post.caption}</p>
+                  {user.is_your_account && (
+                    <div className="py-5 px-5">
+                      <button
+                        onClick={() => {
+                          if (window.confirm("Apakah yakin untuk menghapus?")) {
+                            handleDelete(post.id);
+                          }
+                        }}
+                        type="button"
+                        className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
