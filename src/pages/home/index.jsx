@@ -66,10 +66,12 @@ const Home = () => {
     fetchFollowers();
   }, []);
 
+  // update
+
   return (
     <>
       <NavbarHome />
-      <div className="container mx-auto flex pt-20">
+      <div className="container flex pt-20 mx-auto">
         <div className="w-2/3 p-4">
           <div className="mb-4">
             <h2 className="text-xl font-bold">News Feed</h2>
@@ -78,17 +80,17 @@ const Home = () => {
         </div>
         {/* Sidebar */}
         <div className="w-1/3 p-4">
-          <div className="bg-white p-6 rounded-lg shadow-md mb-4">
-            <h3 className="font-semibold text-lg mb-2">Follow Requests</h3>
+          <div className="p-6 mb-4 bg-white rounded-lg shadow-md">
+            <h3 className="mb-2 text-lg font-semibold">Follow Requests</h3>
             {followers.length > 0 ? (
               followers.map((username, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between mb-4 border p-2 rounded-md"
+                  className="flex items-center justify-between p-2 mb-4 border rounded-md"
                 >
                   <span>@{username}</span>
                   <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                    className="px-3 py-1 text-white bg-blue-500 rounded"
                     onClick={() => handleConfirm(username)}
                   >
                     Confirm
@@ -99,12 +101,12 @@ const Home = () => {
               <p>Tidak ada follow requests</p>
             )}
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="font-semibold text-lg mb-4">Explore People</h3>
+          <div className="p-6 bg-white rounded-lg shadow-md">
+            <h3 className="mb-4 text-lg font-semibold">Explore People</h3>
             {users.length > 0 ? (
               <ul>
                 {users.map((user, index) => (
-                  <li key={index} className="mb-2 border p-2 rounded-md">
+                  <li key={index} className="p-2 mb-2 border rounded-md">
                     <Link to={`/users/${user.username}`}>@{user.username}</Link>
                   </li>
                 ))}
