@@ -42,7 +42,7 @@ const Following = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p>Loading...</p>
+                    <p>Zero Following</p>
                 )}
             </div>
         </>
