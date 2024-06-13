@@ -37,7 +37,7 @@ const Home = () => {
         {/* Sidebar */}
         <div className="w-1/3 p-4">
           <div className="bg-white p-6 rounded-lg shadow-md mb-4">
-            <h3 className="font-semibold text-lg mb-2">Follow Requests</h3>
+            <div className="font-semibold text-lg mb-2">Follow Requests</div>
             <div className="flex items-center justify-between mb-4 border p-2 rounded-md">
               <span>@laychristian92</span>
               <button className="bg-blue-500 text-white px-3 py-1 rounded">

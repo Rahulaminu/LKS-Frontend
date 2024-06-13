@@ -38,8 +38,8 @@ const Followers = () => {
                             </li>
                         ))}
                     </ul>
-                ) : (
-                    <p>Yahaha Gak ada yang follow</p>
+                ) :  (
+                    <p>No followers yet!</p>
                 )}
             </div>
         </>
