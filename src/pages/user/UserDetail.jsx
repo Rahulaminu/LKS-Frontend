@@ -25,7 +25,6 @@ const UserDetail = () => {
         }
         const data = await response.json();
         setUser(data);
-        console.log(data);
       } catch (error) {
         setError(error);
       } finally {
@@ -69,7 +68,6 @@ const UserDetail = () => {
       alert(data.message);
       window.location.reload();
     } catch (error) {
-      console.error("Follow error:", error);
       alert(error.message);
     }
   };
@@ -90,7 +88,6 @@ const UserDetail = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Network response was not ok");
       }
-      // const data = await response.json(); // Tidak ada respons JSON untuk status 204
       setUser((prevUser) => ({
         ...prevUser,
         is_following: false,
